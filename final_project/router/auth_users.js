@@ -33,8 +33,8 @@ regd_users.post("/login", (req,res) => {
   //Write your code here
   // return res.status(300).json({message: "Yet to be implemented"});
 
-  const username = req.query.username;
-  const password = req.query.password;
+  const username = req.body.username;
+  const password = req.body.password;
   req.session.username = username;
   if (!username || !password) {
     res.status(404).send("Error log in");
@@ -67,12 +67,12 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 
   if (books[isbn].reviews[user]) {
     books[isbn].reviews[user] = review;
-    return res.status(300).send("review updated successfully");
+    return res.status(300).send(`The review for the book with ISBN ${isbn} has been updated`);
   }
 
   books[isbn].reviews[user] = review;
   // console.log(books);
-  return res.json({message: "review added successfully"});
+  return res.json({message: `The review for the book with ISBN ${isbn} has been added`});
 });
 
 // delete a book review
@@ -80,11 +80,11 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
   const user = req.session.username;
   const isbn = req.params.isbn;
   if (!books[isbn].reviews[user]) {
-    return res.status(404).send("No review under this user is found");
+    return res.status(404).send(`No review under ${user} is found`);
   }
   delete books[isbn].reviews[user];
   // console.log(books);
-  return res.status(200).send("The review under this user is successfully deleted");
+  return res.status(200).send(`The review under ${user} is successfully deleted`);
 })
 
 module.exports.authenticated = regd_users;
